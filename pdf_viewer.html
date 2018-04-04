@@ -19,6 +19,15 @@
         .hidden { display: none; }
         .success { color: #4F8A10; background-color: #DFF2BF; }
         .fail { color: #D8000C; background-color: #FFBABA; }
+        .overlay{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width:  100vw;
+            height: 100vh;
+            z-index: 999999;
+            background: rgba(0,0,0,0.01);
+        }
     </style>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
@@ -38,6 +47,13 @@
 </nav>
 
 <main role="main">
+
+    <div class="overlay">
+        <div style="text-align: center;padding: 10px;">
+            <button class="previous">Previous</button>
+            <button class="next">Next</button>
+        </div>
+    </div>
 
     <div id="results" class="hidden"></div>
 
@@ -82,5 +98,44 @@
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script>
+    window.pageNumber = 1;
+    $(".overlay").on("contextmenu",function(e){
+        return false;
+    });
+    $(".previous").on('click', function(){
+        if(window.pageNumber!=1){
+            window.pageNumber--;
+        }
+        var options = {
+            pdfOpenParams: {
+                pagemode: "thumbs",
+                navpanes: 0,
+                toolbar: 0,
+                statusbar: 0,
+                view: "FitV",
+                page: window.pageNumber
+            }
+        };
+        var pdfURL = getUrlParameter('url');
+        window.myPDF = PDFObject.embed(pdfURL, "#pdf", options);
+    });
+
+    $(".next").on('click', function(){
+        window.pageNumber++;
+        var options = {
+            pdfOpenParams: {
+                pagemode: "thumbs",
+                navpanes: 0,
+                toolbar: 0,
+                statusbar: 0,
+                view: "FitV",
+                page: window.pageNumber
+            }
+        };
+        var pdfURL = getUrlParameter('url');
+        window.myPDF = PDFObject.embed(pdfURL, "#pdf", options);
+    })
+</script>
 </body>
 </html>
